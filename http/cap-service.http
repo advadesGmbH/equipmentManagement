@@ -6,3 +6,9 @@ Content-Type: application/json
     "mimeType": "application/pdf",
     "document": null
 }
+
+### Test: checkAiCoreConnection Action
+POST http://localhost:4004/fleet/checkAiCoreConnection
+Content-Type: application/json
+
+{}

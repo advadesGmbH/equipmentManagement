@@ -1,0 +1,39 @@
+@authUrl = {{$dotenv AICORE_AUTH_URL}}
+@clientId = {{$dotenv AICORE_CLIENT_ID}}
+@clientSecret = {{$dotenv AICORE_CLIENT_SECRET}}
+@baseUrl = {{$dotenv AICORE_BASE_URL}}
+@resourceGroup = default
+
+### 1. OAuth Token holen
+# @name getToken
+POST {{authUrl}}/oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{clientId}}&client_secret={{clientSecret}}
+
+### 2. Deployments auflisten (ohne scenarioId-Filter, zeigt auch Orchestration-Deployments)
+GET {{baseUrl}}/v2/lm/deployments
+AI-Resource-Group: {{resourceGroup}}
+Authorization: Bearer {{getToken.response.body.access_token}}
+
+### 3. Orchestration Completion an dein bestehendes Deployment
+POST {{baseUrl}}/v2/inference/deployments/d630fb2467fb5394/completion
+Content-Type: application/json
+AI-Resource-Group: {{resourceGroup}}
+Authorization: Bearer {{getToken.response.body.access_token}}
+
+{
+    "orchestration_config": {
+        "module_configurations": {
+            "llm_module_config": {
+                "model_name": "gpt-4o-mini",
+                "model_params": {}
+            },
+            "templating_module_config": {
+                "template": [
+                    { "role": "user", "content": "Antworte kurz: Verbindung funktioniert." }
+                ]
+            }
+        }
+    }
+}

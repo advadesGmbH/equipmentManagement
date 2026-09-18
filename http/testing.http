@@ -1,0 +1,8 @@
+POST http://localhost:4004/fleet/uploadDocumentForAi
+Content-Type: application/json
+
+{
+    "fileName": "testrechnung.pdf",
+    "mimeType": "application/pdf",
+    "document": null
+}
